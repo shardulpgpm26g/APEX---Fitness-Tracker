@@ -206,7 +206,7 @@ const CoverageCard = ({ title, active, onAdd, isForced }: any) => {
       <div className="bg-emerald-500/10 text-emerald-500 py-3 rounded-2xl font-bold text-center uppercase text-sm">Successfully Added</div>
     </div>
   );
-
+ 
   return (
     <div className="bg-zinc-900 border-2 border-orange-500/50 rounded-3xl p-6 shadow-lg shadow-orange-500/5 animate-in slide-in-from-top-4">
       <h4 className="text-orange-500 text-lg font-black uppercase mb-1">Weekly Coverage - {title}</h4>
