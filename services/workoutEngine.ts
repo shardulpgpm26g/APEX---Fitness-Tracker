@@ -97,7 +97,7 @@ export const generateWorkout = (
     const { trapsDone, rearDeltsDone } = checkWeeklyRequirement(sessions, currentCycleStart);
     if (!trapsDone) {
       const ex = getOldestExercise('Back', 'Traps', exerciseHistory, selectedIds);
-      if (ex) {
+      if (ex) { 
         selectedIds.push(ex.id);
         logs.push({ exerciseId: ex.id, name: ex.name, muscleGroup: ex.muscleGroup, subGroup: ex.subGroup, sets: [], timestamp: Date.now() });
       }
