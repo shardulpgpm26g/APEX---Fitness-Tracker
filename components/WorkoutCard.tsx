@@ -74,7 +74,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ log, onUpdate, onReplace, isL
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
               className="flex-1 bg-zinc-800 border-none rounded-2xl px-4 py-3 text-sm font-black focus:ring-2 focus:ring-emerald-500"
-            />
+            /> 
             <input 
               type="number" 
               placeholder="REPS"
