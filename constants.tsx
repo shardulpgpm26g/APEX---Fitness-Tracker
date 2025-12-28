@@ -163,7 +163,7 @@ export const WORKOUT_SPLIT: SplitDay[] = [
       { muscleGroup: 'Shoulders', count: 1, subGroups: ['Front Delt'] },
     ]
   },
-  {
+  { 
     title: 'Day 4 – Arms (Biceps, Triceps, Forearms)',
     requirements: [
       { muscleGroup: 'Biceps', count: 3, subGroups: ['Long', 'Short', 'Brachialis'] },
