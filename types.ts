@@ -32,7 +32,7 @@ export interface ExerciseLog {
   subGroup: SubGroup;
   sets: SetRecord[];
   timestamp: number;
-}
+} 
 
 export interface WorkoutSession {
   id: string;
