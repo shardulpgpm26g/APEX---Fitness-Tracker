@@ -48,6 +48,6 @@ const History: React.FC<HistoryProps> = ({ sessions }) => {
       ))}
     </div>
   );
-};
+}; 
 
 export default History;
