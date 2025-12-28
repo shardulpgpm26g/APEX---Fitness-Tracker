@@ -177,5 +177,5 @@ const StatCard = ({ value, label, icon, color }: any) => (
     <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-wider">{label}</span>
   </div>
 );
-
+ 
 export default Dashboard;
