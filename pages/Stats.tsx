@@ -197,7 +197,7 @@ const Calendar = ({ sessions, onDateClick }: any) => {
               onClick={onDateClick}
               className={`w-full aspect-square rounded-full flex items-center justify-center text-xs font-black transition-all ${hasSession ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' : 'bg-zinc-800/40 text-zinc-500 hover:bg-zinc-800'}`}
             >
-              {d}
+              {d} 
             </button>
           );
         })}
