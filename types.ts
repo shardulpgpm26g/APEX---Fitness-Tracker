@@ -29,10 +29,16 @@ export interface ExerciseLog {
   exerciseId: string;
   name: string;
   muscleGroup: MuscleGroup;
-  subGroup: SubGroup;
-  sets: SetRecord[];
+  subGroup?: SubGroup;
+
+  //New
+  availableExercises: Exercise[];
+  selectedIndex: number;
+
+  sets: SetLog[];
   timestamp: number;
-} 
+}
+
 
 export interface WorkoutSession {
   id: string;
