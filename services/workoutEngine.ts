@@ -62,6 +62,23 @@ export const checkWeeklyRequirement = (
   return { trapsDone, rearDeltsDone };
 };
 
+const createExerciseLog = (
+  ex: Exercise,
+  selectedIds: string[]
+): ExerciseLog => ({
+  exerciseId: ex.id,
+  name: ex.name,
+  muscleGroup: ex.muscleGroup,
+  subGroup: ex.subGroup,
+  availableExercises: getExercisePool(
+    ex.muscleGroup,
+    ex.subGroup
+  ),
+  selectedIndex: 0,
+  sets: [],
+  timestamp: Date.now()
+});
+
 export const generateWorkout = (
   dayIndex: number,
   exerciseHistory: Record<string, number>,
@@ -78,20 +95,7 @@ export const generateWorkout = (
         const ex = getOldestExercise(req.muscleGroup, sub, exerciseHistory, selectedIds);
         if (ex) {
           selectedIds.push(ex.id);
-          logs.push({
-            exerciseId: ex.id,
-            name: ex.name,
-            muscleGroup: ex.muscleGroup,
-            subGroup: ex.subGroup,
-            availableExercises: getExercisePool(
-              ex.muscleGroup,
-              ex.subGroup,
-              selectedIds
-            ),
-            selectedIndex: 0,
-            sets: [],
-            timestamp: Date.now()
-          });
+          logs.push(createExerciseLog(ex, selectedIds));
         }
       });
     } else {
@@ -99,14 +103,7 @@ export const generateWorkout = (
         const ex = getOldestExercise(req.muscleGroup, undefined, exerciseHistory, selectedIds);
         if (ex) {
           selectedIds.push(ex.id);
-          logs.push({
-            exerciseId: ex.id,
-            name: ex.name,
-            muscleGroup: ex.muscleGroup,
-            subGroup: ex.subGroup,
-            sets: [],
-            timestamp: Date.now()
-          });
+          logs.push(createExerciseLog(ex, selectedIds));
         }
       }
     }
@@ -119,14 +116,14 @@ export const generateWorkout = (
       const ex = getOldestExercise('Back', 'Traps', exerciseHistory, selectedIds);
       if (ex) { 
         selectedIds.push(ex.id);
-        logs.push({ exerciseId: ex.id, name: ex.name, muscleGroup: ex.muscleGroup, subGroup: ex.subGroup, sets: [], timestamp: Date.now() });
+        logs.push(createExerciseLog(ex, selectedIds));
       }
     }
     if (!rearDeltsDone) {
       const ex = getOldestExercise('Back', 'Rear Delts', exerciseHistory, selectedIds);
       if (ex) {
         selectedIds.push(ex.id);
-        logs.push({ exerciseId: ex.id, name: ex.name, muscleGroup: ex.muscleGroup, subGroup: ex.subGroup, sets: [], timestamp: Date.now() });
+        logs.push(createExerciseLog(ex, selectedIds));
       }
     }
   }
