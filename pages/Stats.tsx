@@ -1,7 +1,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { WorkoutSession } from '../types';
-import { MOTIVATIONAL_QUOTES } from '../constants';
+import { getDailyMotivationQuote } from '../constants';
 import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -91,9 +91,7 @@ const Stats: React.FC<StatsProps> = ({ sessions }) => {
     return data;
   }, [completed, graphDays]);
 
-  const today = new Date();
-  const quoteIndex = (today.getFullYear() * 365 + today.getMonth() * 31 + today.getDate()) % MOTIVATIONAL_QUOTES.length;
-  const quote = MOTIVATIONAL_QUOTES[quoteIndex];
+  const quote = getDailyMotivationQuote();
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-20">
