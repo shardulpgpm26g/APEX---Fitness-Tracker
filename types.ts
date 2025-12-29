@@ -35,10 +35,9 @@ export interface ExerciseLog {
   availableExercises: Exercise[];
   selectedIndex: number;
 
-  sets: SetLog[];
+  sets: SetRecord[];
   timestamp: number;
 }
-
 
 export interface WorkoutSession {
   id: string;
