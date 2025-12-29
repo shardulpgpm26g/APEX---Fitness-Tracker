@@ -2,7 +2,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { WorkoutSession, ExerciseLog, SubGroup } from '../types';
-import { generateWorkout, getOldestExercise, checkWeeklyRequirement } from '../services/workoutEngine';
+import { 
+  generateWorkout, 
+  getOldestExercise, 
+  checkWeeklyRequirement,
+  createExerciseLog
+} from '../services/workoutEngine';
+
 import WorkoutCard from '../components/WorkoutCard';
 
 interface ActiveWorkoutProps {
@@ -79,7 +85,7 @@ const ActiveWorkout: React.FC<ActiveWorkoutProps> = ({ sessions, onComplete, exe
   const updateLog = (updatedLog: ExerciseLog) => {
     setCurrentWorkout({
       ...currentWorkout,
-      exercises: currentWorkout.exercises.map(ex => ex.exerciseId === updatedLog.exerciseId ? updatedLog : ex)
+      exercises: currentWorkout.exercises.map(ex => ex.logId === updatedLog.logId ? updatedLog : ex)
     });
   };
 
@@ -94,7 +100,18 @@ const ActiveWorkout: React.FC<ActiveWorkoutProps> = ({ sessions, onComplete, exe
     const newEx = getOldestExercise(currentLog.muscleGroup, currentLog.subGroup, exerciseHistory, excludeIds);
     if (newEx) {
       const newLogs = [...currentWorkout.exercises];
-      newLogs[logIndex] = { ...newEx, exerciseId: newEx.id, sets: [], timestamp: Date.now() };
+      newLogs[logIndex] = {
+        ...currentLog,            // preserve logId
+        exerciseId: newEx.id,
+        name: newEx.name,
+        muscleGroup: newEx.muscleGroup,
+        subGroup: newEx.subGroup,
+        availableExercises: currentLog.availableExercises,
+        selectedIndex: currentLog.availableExercises.findIndex(e => e.id === newEx.id),
+        sets: [],
+        timestamp: Date.now()
+      };
+
       setCurrentWorkout({ ...currentWorkout, exercises: newLogs });
     }
   };
@@ -122,16 +139,16 @@ const ActiveWorkout: React.FC<ActiveWorkoutProps> = ({ sessions, onComplete, exe
       if (type === 'Abs') {
         ['Upper Abs', 'Lower Abs', 'Obliques', 'Entire Core'].forEach(s => {
           const ex = getOldestExercise('Abs', s as SubGroup, exerciseHistory, [...exclude, ...newLogs.map(n => n.exerciseId)]);
-          if (ex) newLogs.push({ ...ex, exerciseId: ex.id, sets: [], timestamp: Date.now() });
+          if (ex) newLogs.push(createExerciseLog(ex, newLogs.map(l => l.exerciseId)));
         });
       } else if (type === 'Forearms') {
         ['Reverse Forearm', 'Inner Forearm', 'Brachioradialis'].forEach(s => {
           const ex = getOldestExercise('Forearms', s as SubGroup, exerciseHistory, [...exclude, ...newLogs.map(n => n.exerciseId)]);
-          if (ex) newLogs.push({ ...ex, exerciseId: ex.id, sets: [], timestamp: Date.now() });
+          if (ex) newLogs.push(createExerciseLog(ex, newLogs.map(l => l.exerciseId)));
         });
       } else {
         const ex = getOldestExercise('Back', type as SubGroup, exerciseHistory, exclude);
-        if (ex) newLogs.push({ ...ex, exerciseId: ex.id, sets: [], timestamp: Date.now() });
+        if (ex) newLogs.push(createExerciseLog(ex, newLogs.map(l => l.exerciseId)));
       }
       setCurrentWorkout({ ...currentWorkout, exercises: newLogs });
     }
@@ -170,7 +187,7 @@ const ActiveWorkout: React.FC<ActiveWorkoutProps> = ({ sessions, onComplete, exe
       <div className="space-y-4">
         {currentWorkout.exercises.map((log, idx) => (
           <WorkoutCard 
-            key={log.exerciseId} 
+            key={log.logId} 
             log={log} 
             onUpdate={updateLog} 
             onReplace={() => replaceExercise(idx)} 
