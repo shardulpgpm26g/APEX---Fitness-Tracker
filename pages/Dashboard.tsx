@@ -71,7 +71,7 @@ const Dashboard: React.FC<DashboardProps> = ({ sessions, currentCycleStart, acti
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <header className="pt-4">
-        <p className="text-zinc-500 text-sm font-medium">Welcome Back</p>
+        <p className="text-zinc-500 text-sm font-medium">Welcome Back, Shardul!</p>
         <h1 className="text-4xl font-bold tracking-tight">Let's Crush It</h1>
       </header>
 
