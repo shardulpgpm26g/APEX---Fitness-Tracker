@@ -1,17 +1,42 @@
 
 import { Exercise, SplitDay } from './types';
 
-export const MOTIVATIONAL_QUOTES = [
-  "Strength does not come from winning. Your struggles develop your strengths.",
+export const MOTIVATIONAL_QUOTES: string[] = [
+  "Progress hides in unremarkable days.",
+  "You don’t need motivation — you need a routine.",
+  "The work counts even when no one sees it.",
+  "You train because skipping is easy.",
+  "Average days build exceptional outcomes.",
+  "The body responds to what you repeat.",
+  "Progress is built quietly, then revealed.",
+  "Train like today matters because it does.",
+  "Show discipline before demanding results.",
+  "Power is built one clean rep at a time.",
+  "Back days build posture, patience, and power.",
+  "If it’s uncomfortable, you’re doing it right.",
+  "You leave stronger than you arrived.",
+  "Every session is a vote for the person you’re becoming.",
+  "You are exactly as disciplined as your results show.",
+  "Show up long after motivation leaves.",
+  "Respect the weight and the process.",
+  "You leave stronger because you chose to stay disciplined.",
+  "You don’t need perfect days. You need committed ones.",
+  "The body adapts to standards you enforce.",
+  "Progress doesn’t announce itself, it accumulates.",
   "The only person you are destined to become is the person you decide to be.",
-  "Pain is temporary. Quitting lasts forever.",
-  "Don't stop when you're tired. Stop when you're done.",
-  "Success is usually the culmination of controlling failure.",
-  "Discipline is doing what needs to be done, even if you don't want to do it.",
   "Your body can stand almost anything. It's your mind that you have to convince.",
-  "Character is the ability to carry out a good resolution long after the excitement of the moment has passed.",
-  "The resistance that you fight physically in the gym and the resistance that you fight in life can only build a strong character."
+  "The resistance that you fight physically in the gym and the resistance that you fight in life can only build a strong character.",
+  "Discipline is doing what needs to be done, even if you don't want to do it."
 ];
+
+export const getDailyMotivationQuote = (): string => {
+  const today = new Date();
+
+  // Days since Unix epoch (stable across reloads)
+  const dayIndex = Math.floor(today.getTime() / (1000 * 60 * 60 * 24));
+
+  return MOTIVATIONAL_QUOTES[dayIndex % MOTIVATIONAL_QUOTES.length];
+};
 
 export const EXERCISE_DATA: Exercise[] = [
   // ABS
