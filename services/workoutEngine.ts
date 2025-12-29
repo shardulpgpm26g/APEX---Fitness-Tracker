@@ -66,6 +66,7 @@ const createExerciseLog = (
   ex: Exercise,
   selectedIds: string[]
 ): ExerciseLog => ({
+  logId: `log-${Date.now()}-${Math.random()}`,
   exerciseId: ex.id,
   name: ex.name,
   muscleGroup: ex.muscleGroup,
