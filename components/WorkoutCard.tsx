@@ -116,54 +116,62 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ log, onUpdate, isLocked }) =>
             </button>
           </div>
         ))}
+        {!showInput && (
+  <button
+    onClick={() => {
+      setShowOptions(false);
+      setShowInput(true);
+    }}
+    className="w-full flex items-center gap-4 bg-zinc-800/20 border border-dashed border-zinc-700 p-4 rounded-2xl text-zinc-500 hover:border-emerald-500 transition-colors"
+  >
+    <div className="w-6 h-6 rounded-full border-2 border-zinc-700"></div>
+    <span className="font-bold text-sm">
+      Tap to log set {log.sets.length + 1}
+    </span>
+  </button>
+)}
 
-        {!showInput ? (
-          <button
-            onClick={() => {
-              setShowOptions(false);
-              setShowInput(true);
-              setTimeout(() => weightRef.current?.focus(), 0);
-            }}
-            className="w-full bg-zinc-800/20 border border-dashed border-zinc-700 p-4 rounded-2xl text-zinc-500"
-          >
-            Tap to log set {log.sets.length + 1}
-          </button>
-        ) : (
-          <div className="flex gap-2">
-            <input
-              ref={weightRef}
-              type="number"
-              inputMode="decimal"
-              value={weight}
-              onChange={e => setWeight(e.target.value)}
-              placeholder="KG"
-              className="flex-1 bg-zinc-800 rounded-2xl px-4 py-3 font-black"
-              style={{ fontSize: '16px' }}
-            />
+        {showInput && (
+          <div className="space-y-3 animate-in slide-in-from-top-2 duration-300">
+            <div className="flex gap-2">
+              <input
+                ref={weightRef}
+                autoFocus
+                type="number"
+                inputMode="decimal"
+                placeholder="KG"
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
+                className="flex-1 bg-zinc-800 rounded-2xl px-4 py-3 font-black focus:ring-2 focus:ring-emerald-500"
+                style={{ fontSize: '16px' }}
+              />
 
-            <input
+              <input
               ref={repsRef}
               type="number"
               inputMode="numeric"
-              value={reps}
-              onChange={e => setReps(e.target.value)}
               placeholder="REPS"
-              className="w-24 bg-zinc-800 rounded-2xl px-4 py-3 font-black"
+              value={reps}
+              onChange={(e) => setReps(e.target.value)}
+              className="w-24 bg-zinc-800 rounded-2xl px-4 py-3 font-black focus:ring-2 focus:ring-emerald-500"
               style={{ fontSize: '16px' }}
-            />
+              />
+            </div>
 
             <button
               onClick={() => {
-                weightRef.current?.blur();
-                repsRef.current?.blur();
-                addSet();
-              }}
-              className="bg-emerald-500 text-black px-4 rounded-2xl"
-            >
-              <i className="fa-solid fa-check" />
-            </button>
-          </div>
-        )}
+              weightRef.current?.blur();
+              repsRef.current?.blur();
+              addSet();
+            }}
+            className="w-full bg-emerald-500 text-black py-3 rounded-2xl font-bold flex items-center justify-center gap-2"
+          >
+            <i className="fa-solid fa-check"></i>
+            Save Set
+          </button>
+        </div>
+      )}
+
       </div>
     </div>
   );
