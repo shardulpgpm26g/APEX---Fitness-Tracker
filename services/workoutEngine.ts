@@ -62,23 +62,25 @@ export const checkWeeklyRequirement = (
   return { trapsDone, rearDeltsDone };
 };
 
-const createExerciseLog = (
+export const createExerciseLog = (
   ex: Exercise,
-  selectedIds: string[]
-): ExerciseLog => ({
-  logId: `log-${Date.now()}-${Math.random()}`,
-  exerciseId: ex.id,
-  name: ex.name,
-  muscleGroup: ex.muscleGroup,
-  subGroup: ex.subGroup,
-  availableExercises: getExercisePool(
-    ex.muscleGroup,
-    ex.subGroup
-  ),
-  selectedIndex: 0,
-  sets: [],
-  timestamp: Date.now()
-});
+  selectedIds: string[] = []
+): ExerciseLog => {
+  const pool = getExercisePool(ex.muscleGroup, ex.subGroup, selectedIds);
+  const selectedIndex = pool.findIndex(e => e.id === ex.id);
+
+  return {
+    logId: `log-${Date.now()}-${Math.random()}`,
+    exerciseId: ex.id,
+    name: ex.name,
+    muscleGroup: ex.muscleGroup,
+    subGroup: ex.subGroup,
+    availableExercises: pool,
+    selectedIndex: selectedIndex >= 0 ? selectedIndex : 0,
+    sets: [],
+    timestamp: Date.now()
+  };
+};
 
 export const generateWorkout = (
   dayIndex: number,
