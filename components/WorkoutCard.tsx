@@ -8,12 +8,7 @@ interface WorkoutCardProps {
   isLocked?: boolean;
 }
 
-const WorkoutCard: React.FC<WorkoutCardProps> = ({
-  log,
-  onUpdate,
-  onReplace,
-  isLocked
-}) => {
+const WorkoutCard: React.FC<WorkoutCardProps> = ({ log, onUpdate, isLocked }) => {
   const [weight, setWeight] = useState('');
   const [reps, setReps] = useState('');
   const [showInput, setShowInput] = useState(false);
@@ -23,15 +18,25 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
   const repsRef = useRef<HTMLInputElement>(null);
 
   const addSet = () => {
-    if (!weight) return;
+    const w = weight.trim();
+    const r = reps.trim();
+
+    if (!w) {
+      weightRef.current?.focus();
+      return;
+    }
 
     const newSet: SetRecord = {
-      weight: parseFloat(weight),
-      reps: reps ? parseInt(reps) : undefined
+      weight: Number(w),
+      reps: r ? Number(r) : undefined
     };
 
-    onUpdate({ ...log, sets: [...log.sets, newSet] });
+    onUpdate({
+      ...log,
+      sets: [...log.sets, newSet]
+    });
 
+    // reset safely AFTER update
     setWeight('');
     setReps('');
     setShowInput(false);
@@ -45,33 +50,29 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
   };
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 shadow-sm">
+    <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
       {/* Header */}
-      <div className="flex justify-between items-start mb-6">
+      <div className="flex justify-between mb-6">
         <div>
-          <h3 className="text-xl font-bold leading-tight">{log.name}</h3>
-          <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">
+          <h3 className="text-xl font-bold">{log.name}</h3>
+          <span className="text-xs text-zinc-500 uppercase">
             {log.subGroup || log.muscleGroup}
           </span>
         </div>
 
         {!isLocked && log.availableExercises.length > 1 && (
           <button
-            onClick={() => setShowOptions(prev => !prev)}
+            onClick={() => setShowOptions(v => !v)}
             className="text-emerald-500 p-2 bg-emerald-500/10 rounded-xl"
           >
-            <i
-              className={`fa-solid fa-rotate transition-transform duration-200 ${
-                showOptions ? 'rotate-180' : ''
-              }`}
-            />
+            <i className={`fa-solid fa-rotate ${showOptions ? 'rotate-180' : ''}`} />
           </button>
         )}
       </div>
 
-      {/* Exercise options */}
+      {/* Exercise switch */}
       {showOptions && (
-        <div className="mb-6 bg-zinc-800/60 border border-zinc-700 rounded-2xl p-3 space-y-2 animate-in fade-in slide-in-from-top-2">
+        <div className="mb-6 bg-zinc-800/60 rounded-2xl p-3 space-y-2">
           {log.availableExercises.map((ex, index) => (
             <button
               key={ex.id}
@@ -84,10 +85,10 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
                 });
                 setShowOptions(false);
               }}
-              className={`w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-colors ${
+              className={`w-full px-4 py-3 rounded-xl text-sm font-bold ${
                 index === log.selectedIndex
                   ? 'bg-emerald-500 text-black'
-                  : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-700'
+                  : 'bg-zinc-900 text-zinc-300'
               }`}
             >
               {ex.name}
@@ -97,64 +98,46 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
       )}
 
       {/* Sets */}
-      <div className="space-y-3 mb-6 overscroll-contain">
+      <div className="space-y-3">
         {log.sets.map((set, idx) => (
-          <div
-            key={idx}
-            className="flex items-center gap-4 bg-zinc-800/40 p-4 rounded-2xl border border-zinc-800"
-          >
-            <div className="w-6 h-6 rounded-full border-2 border-emerald-500 flex items-center justify-center text-emerald-500">
-              <i className="fa-solid fa-check text-[10px]" />
+          <div key={idx} className="flex items-center gap-4 bg-zinc-800/40 p-4 rounded-2xl">
+            <div className="w-6 h-6 rounded-full border-2 border-emerald-500 flex items-center justify-center">
+              <i className="fa-solid fa-check text-xs text-emerald-500" />
             </div>
 
             <div className="flex-1 flex gap-4 font-black">
               <span className="text-zinc-500">Set {idx + 1}</span>
-              <span>
-                {set.weight}{' '}
-                <span className="text-[10px] opacity-40">KG</span>
-              </span>
-              {set.reps && (
-                <span>
-                  {set.reps}{' '}
-                  <span className="text-[10px] opacity-40">REPS</span>
-                </span>
-              )}
+              <span>{set.weight} KG</span>
+              {set.reps && <span>{set.reps} REPS</span>}
             </div>
 
-            <button
-              onClick={() => removeSet(idx)}
-              className="text-zinc-600"
-            >
+            <button onClick={() => removeSet(idx)} className="text-zinc-600">
               <i className="fa-solid fa-trash-can" />
             </button>
           </div>
         ))}
 
-        {/* Add set */}
         {!showInput ? (
           <button
             onClick={() => {
               setShowOptions(false);
               setShowInput(true);
+              setTimeout(() => weightRef.current?.focus(), 0);
             }}
-            className="w-full flex items-center gap-4 bg-zinc-800/20 border border-dashed border-zinc-700 p-4 rounded-2xl text-zinc-500 hover:border-emerald-500 transition-colors"
+            className="w-full bg-zinc-800/20 border border-dashed border-zinc-700 p-4 rounded-2xl text-zinc-500"
           >
-            <div className="w-6 h-6 rounded-full border-2 border-zinc-700" />
-            <span className="font-bold text-sm">
-              Tap to log set {log.sets.length + 1}
-            </span>
+            Tap to log set {log.sets.length + 1}
           </button>
         ) : (
-          <div className="flex items-center gap-2 w-full overflow-hidden animate-in slide-in-from-top-2 duration-300">
+          <div className="flex gap-2">
             <input
               ref={weightRef}
-              autoFocus
               type="number"
               inputMode="decimal"
-              placeholder="KG"
               value={weight}
               onChange={e => setWeight(e.target.value)}
-              className="flex-1 bg-zinc-800 border-none rounded-2xl px-4 py-3 font-black focus:ring-2 focus:ring-emerald-500"
+              placeholder="KG"
+              className="flex-1 bg-zinc-800 rounded-2xl px-4 py-3 font-black"
               style={{ fontSize: '16px' }}
             />
 
@@ -162,10 +145,10 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
               ref={repsRef}
               type="number"
               inputMode="numeric"
-              placeholder="REPS"
               value={reps}
               onChange={e => setReps(e.target.value)}
-              className="w-24 bg-zinc-800 border-none rounded-2xl px-4 py-3 font-black focus:ring-2 focus:ring-emerald-500 shrink-0"
+              placeholder="REPS"
+              className="w-24 bg-zinc-800 rounded-2xl px-4 py-3 font-black"
               style={{ fontSize: '16px' }}
             />
 
@@ -175,7 +158,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({
                 repsRef.current?.blur();
                 addSet();
               }}
-              className="bg-emerald-500 text-black px-4 rounded-2xl shrink-0"
+              className="bg-emerald-500 text-black px-4 rounded-2xl"
             >
               <i className="fa-solid fa-check" />
             </button>
