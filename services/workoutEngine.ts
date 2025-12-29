@@ -30,6 +30,20 @@ export const getOldestExercise = (
   })[0];
 };
 
+export const getExercisePool = (
+  muscleGroup: MuscleGroup,
+  subGroup?: SubGroup,
+  excludeIds: string[] = []
+): Exercise[] => {
+  return EXERCISE_DATA
+    .filter(ex =>
+      ex.muscleGroup === muscleGroup &&
+      (!subGroup || ex.subGroup === subGroup) &&
+      !excludeIds.includes(ex.id)
+    )
+    .sort((a, b) => a.name.localeCompare(b.name));
+};
+
 export const checkWeeklyRequirement = (
   sessions: WorkoutSession[],
   currentCycleStart: number
@@ -69,6 +83,12 @@ export const generateWorkout = (
             name: ex.name,
             muscleGroup: ex.muscleGroup,
             subGroup: ex.subGroup,
+            availableExercises: getExercisePool(
+              ex.muscleGroup,
+              ex.subGroup,
+              selectedIds
+            ),
+            selectedIndex: 0,
             sets: [],
             timestamp: Date.now()
           });
