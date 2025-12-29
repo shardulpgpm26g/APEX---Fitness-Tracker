@@ -3,7 +3,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+
     <title>APEX Workout Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -36,6 +40,13 @@
       .gradient-bg {
         background: linear-gradient(135deg, #09090b 0%, #18181b 100%);
       }
+        html, body {
+  width: 100%;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+}
+
     </style>
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
