@@ -13,7 +13,8 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ log, onUpdate, onReplace, isL
   const [weight, setWeight] = useState<string>('');
   const [reps, setReps] = useState<string>('');
   const [showInput, setShowInput] = useState(false);
-
+  const [showOptions, setShowOptions] = useState(false);
+  
   const addSet = () => {
     if (!weight) return;
     const newSet: SetRecord = { weight: parseFloat(weight), reps: reps ? parseInt(reps) : undefined };
@@ -33,13 +34,47 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ log, onUpdate, onReplace, isL
           <h3 className="text-xl font-bold leading-tight">{log.name}</h3>
           <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">{log.subGroup || log.muscleGroup}</span>
         </div>
-        {!isLocked && onReplace && (
-          <button onClick={onReplace} className="text-emerald-500 p-2 bg-emerald-500/10 rounded-xl">
-            <i className="fa-solid fa-rotate"></i>
+
+        {!isLocked && log.availableExercises.length > 1 && (
+          <button
+            onClick={() => setShowOptions(prev => !prev)}
+            className="text-emerald-500 p-2 bg-emerald-500/10 rounded-xl"
+          >
+            <i
+               className={`fa-solid fa-rotate transition-transform duration-200 ${
+                showOptions ? 'rotate-180' : ''
+               }`}
+            ></i>
+
           </button>
         )}
-      </div>
 
+      </div>
+      {showOptions && (
+          <div className="mb-6 bg-zinc-800/60 border border-zinc-700 rounded-2xl p-3 space-y-2 animate-in fade-in slide-in-from-top-2">
+            {log.availableExercises.map((ex, index) => (
+              <button
+                key={ex.id}
+                onClick={() => {
+                  onUpdate({
+                    ...log,
+                    exerciseId: ex.id,
+                    name: ex.name,
+                    selectedIndex: index
+                  });
+                  setShowOptions(false);
+                 }}
+                 className={`w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-colors ${
+                  index === log.selectedIndex
+                    ? 'bg-emerald-500 text-black'
+                    : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-700'
+                }`}
+               >
+                {ex.name}
+               </button>
+             ))}
+           </div>
+         )}
       <div className="space-y-3 mb-6">
         {log.sets.map((set, idx) => (
           <div key={idx} className="flex items-center gap-4 bg-zinc-800/40 p-4 rounded-2xl border border-zinc-800">
@@ -59,7 +94,11 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ log, onUpdate, onReplace, isL
 
         {!showInput ? (
           <button 
-            onClick={() => setShowInput(true)}
+            onClick={() => {
+            setShowOptions(false);   // 👈 CLOSE dropdown
+            setShowInput(true);     // 👈 OPEN set input
+          }}
+
             className="w-full flex items-center gap-4 bg-zinc-800/20 border border-dashed border-zinc-700 p-4 rounded-2xl text-zinc-500 hover:border-emerald-500 transition-colors"
           >
             <div className="w-6 h-6 rounded-full border-2 border-zinc-700"></div>
