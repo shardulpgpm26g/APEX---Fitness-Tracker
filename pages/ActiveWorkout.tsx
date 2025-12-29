@@ -144,9 +144,6 @@ const ActiveWorkout: React.FC<ActiveWorkoutProps> = ({ sessions, onComplete, exe
           <Link to="/" className="text-zinc-500 hover:text-white transition-colors flex items-center gap-2 font-bold">
             <i className="fa-solid fa-chevron-left"></i> Save & Exit
           </Link>
-          <button onClick={handleFinish} className="bg-emerald-500 text-black px-8 py-2.5 rounded-full font-black shadow-lg shadow-emerald-500/20 active:scale-95 transition-all">
-            FINISH
-          </button>
         </div>
         <div>
           <p className="text-emerald-500 text-sm font-bold uppercase tracking-widest">Day {currentWorkout.dayIndex + 1}</p>
@@ -181,6 +178,15 @@ const ActiveWorkout: React.FC<ActiveWorkoutProps> = ({ sessions, onComplete, exe
           />
         ))}
       </div>
+      <div className="pt-10 pb-32">
+       <button
+          onClick={handleFinish}
+          className="w-full bg-emerald-500 text-black py-4 rounded-2xl font-black text-lg shadow-lg shadow-emerald-500/30 active:scale-95 transition-all"
+         >
+          FINISH WORKOUT
+         </button>
+      </div>
+
     </div>
   );
 };
