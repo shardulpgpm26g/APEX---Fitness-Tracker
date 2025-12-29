@@ -1,6 +1,6 @@
 import React from 'react';
 import { WorkoutSession } from '../types';
-
+ 
 interface HistoryProps {
   sessions: WorkoutSession[];
 }
