@@ -26,15 +26,13 @@ export interface SetRecord {
 }
 
 export interface ExerciseLog {
+  logId: string;
   exerciseId: string;
   name: string;
   muscleGroup: MuscleGroup;
   subGroup?: SubGroup;
-
-  //New
   availableExercises: Exercise[];
   selectedIndex: number;
-
   sets: SetRecord[];
   timestamp: number;
 }
